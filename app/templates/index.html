@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<main>
+    <div class="row">
+      <div class="col-md-4 m-auto">
+        <div class="row card card-outline-secondary">
+          <div class="card-body">
+            <h3 class="text-center">Redact Credit Card Information</h3>
+            <hr />
+            <div class="alert alert-info p-2">
+              Please fill in and submit form to redact data.
+            </div>
+            <form id="cc-form" method="post" action="/add_encryption">
+              <div class="form-group">
+                <label for="cc-number">Card number</label>
+                <span id="cc-number" class="form-field">
+                  <!--VGS Collect iframe for card number field will be here!-->
+                </span>
+              </div>
+              <div class="form-group">
+                <label for="cc-cvc">CVC</label>
+                <span id="cc-cvc" class="form-field">
+                  <!--VGS Collect iframe for CVC field will be here!-->
+                </span>
+              </div>
+              <div class="form-group">
+                <label for="cc-expiration-date">Expiration date</label>
+                <span id="cc-expiration-date" class="form-field">
+                  <!--VGS Collect iframe for expiration date field will be here!-->
+                </span>
+              </div>
+              <!--Submit credit card form button-->
+              <button type="submit" class="btn btn-success btn-block">
+                Submit
+              </button>
+              <input id="card_number" name="card_number" type="hidden">
+              <input id="card_cvc" name="card_cvc" type="hidden">
+              <input id="card_expirationDate" name="card_expirationDate" type="hidden">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!--Include script with VGS Collect form initialization-->
+  <script>
+    // VGS Collect form initialization
+    const form = VGSCollect.create("{{ VAULT_ID }}", "{{ VGS_ENV }}", function(state) {});
+    // Create VGS Collect field for credit card number
+    form.field("#cc-number", {
+      type: "card-number",
+      name: "card_number",
+      successColor: "#4F8A10",
+      errorColor: "#D8000C",
+      placeholder: "4111 1111 1111 1111",
+      validations: ["required"],
+    });
+
+    // Create VGS Collect field for CVC
+    form.field("#cc-cvc", {
+      type: "card-security-code",
+      name: "card_cvc",
+      placeholder: "344",
+      validations: ["required"],
+    });
+
+    // Create VGS Collect field for credit card expiration date
+    form.field("#cc-expiration-date", {
+      type: "card-expiration-date",
+      name: "card_expirationDate",
+      placeholder: "01 / 2022",
+      validations: ["required"],
+    });
+
+    // Submits all of the form fields by executing a POST request.
+    document.getElementById("cc-form").addEventListener(
+      "submit",
+      function (e) {
+        e.preventDefault();
+        form.submit("/post", {}, function (status, data) {
+            // Updating values on Form's elements
+            document.getElementById("card_number").value = data.json['card_number'];
+            document.getElementById("card_cvc").value = data.json['card_cvc'];
+            document.getElementById("card_expirationDate").value = data.json['card_expirationDate'];
+
+            // Unbinding previous event
+            $(this).unbind(e);
+            document.getElementById("cc-form").submit();
+        });
+      }
+    );
+  </script>
+{% endblock %}
