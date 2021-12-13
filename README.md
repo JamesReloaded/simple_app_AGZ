@@ -18,11 +18,20 @@ pip3 install -r requirements.txt
 
 ## Configuration
 
-After verifying all the requirements are met, add your VGS's account information at the .env file. You will need the following:
+After verifying all the requirements are met, create a .env file on the same location as the simple_app.py file. You will need the following:
 * Vault ID
 * Username
 * Password
 * Environment
+
+The .env file should look like the following:
+```bash
+# environment variables for VGS connectivity
+VAULT_ID = "<your_vault_id>"
+VGS_ENV = "sandbox"
+VGS_USER = "<your_username>"
+VGS_PASS = "<your_password>"
+```
 
 ## Usage
 
