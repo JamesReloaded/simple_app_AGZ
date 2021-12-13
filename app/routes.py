@@ -21,7 +21,6 @@ def add_encryption():
 @app.route("/forward", methods=['POST'])
 def forward():
     os.environ['HTTPS_PROXY'] = "http://{}:{}@{}.{}.verygoodproxy.com:8080".format(USERNAME, PASSWORD, TENANT_ID, ENVIRONMENT)
-    # 'http://USeBWsNRGyFGii4ixePXpNzg:39e4c424-be1e-4e84-a793-8dc5ffababfb@tntyfpdytzj.sandbox.verygoodproxy.com:8080'
     response = requests.post('https://echo.apps.verygood.systems/post',
                             json={
                                 'card_number': request.form['card_number'],
